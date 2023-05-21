@@ -1,15 +1,37 @@
 #include <stdio.h>
+#include <string.h>
 
-
-void print_start_screen()
+void writeStringToBuffer(const char* string, int x, int y, char* screenBuf, int width)
 {
-    char screen[] = "###############################\n"
-                    "##                           ##\n"
-                    "##  1. Start Game            ##\n"
-                    "##                           ##\n"
-                    "###############################\n";
+    int stringLength = strlen(string);
 
-    printf("%s", screen);
+    for (int i = 0; i < stringLength; i++) {
+        screenBuf[(y * width) + x + i] = string[i];
+    }
+}
+
+void setTitleToScreenBuffer(char* screenBuf, int width, int height)
+{    
+    const char* titleMessage = "###############################\n"
+                               "##                           ##\n"
+                               "##                           ##\n"
+                               "##                           ##\n"
+                               "###############################\n";
+
+    int messageLength = strlen(titleMessage);
+
+    for (int i = 0; i < messageLength; i++) {
+        screenBuf[i] = titleMessage[i];
+    }
+}
+void printScreenBuffer(const char* screenBuf, int width, int height)
+{
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++) {
+            printf("%c", screenBuf[(i * width) + j]);
+        }
+        printf("\n");
+    }
 }
 void print_start1_screen()
 {
@@ -43,26 +65,32 @@ void print_start3_screen()
 }
 int main()
 {
-	int game_state = 1;
-	{
-		print_start_screen();
-		printf("inqut=");
-		scanf("%d",&game_state);
-		if(game_state == 1)
-		{
-			print_start1_screen();
-			printf("1.포기한다 2. 댜충이라도 한다:");
-			scanf("%d",&game_state);
-			if(game_state == 1)
-			{
-				print_start2_screen();
-			}
-			else if(game_state == 2)
-			{
-				print_start3_screen();
-			}
+    int width = 30;
+    int height = 15;
 
-		}
-	}
-	return 0;
+    char screen[width * height];
+    memset(screen, ' ', sizeof(screen));
+
+    setTitleToScreenBuffer(screen, width, height);
+
+    writeStringToBuffer("1. Start Game", 4, 2, screen, width);
+
+    printScreenBuffer(screen, width, height);
+
+    int game_state = 1;
+    printf("input: ");
+    scanf("%d", &game_state);
+
+    if (game_state == 1) {
+        print_start1_screen();
+        printf("1.포기한다 2. 댜충이라도 한다:");
+        scanf("%d", &game_state);
+        if (game_state == 1) {
+            print_start2_screen();
+        } else if (game_state == 2) {
+            print_start3_screen();
+        }
+    }
+
+    return 0;
 }
